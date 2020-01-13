@@ -1,5 +1,6 @@
 version: '3'
 
+# Contaniner api adonis
 services:
   api:
     container_name: docker-lab-api
@@ -8,3 +9,31 @@ services:
       - 3333:3333
     volumes:
       - ./:/app
+    networks: 
+      - docker-adonis-api   
+    depends_on:
+        - mysqlsrv 
+
+# Container Mysql
+  mysqlsrv:
+    # container_name: mysql-docker
+    container_name: mysql-docker
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: fernando
+      MYSQL_PASSWORD: pedro221104
+    ports:
+        # - "3308:3308"
+        - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - /home/fernando/volumes/mysql:/var/lib/mysql  
+    networks: 
+      - docker-adonis-api
+
+      # Network
+networks:
+  docker-adonis-api:

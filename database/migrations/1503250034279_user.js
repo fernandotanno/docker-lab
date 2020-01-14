@@ -10,7 +10,7 @@ class UserSchema extends Schema {
       table.string('username', 80).notNullable().unique()
       table.string('email', 254).notNullable().unique()      
       table.string('password', 60).notNullable()
-      table.enu('type', ['manager', 'seller'])
+      table.enu('access', ['manager', 'seller'])
       table.boolean('status').defaultTo(true)
       table.timestamps()
     })

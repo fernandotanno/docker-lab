@@ -6,6 +6,7 @@ version: '3'
 services:
   api:
     container_name: docker-lab-api
+    # command: bash adonis install @adonisjs/validator && npm update
     build: .
     ports:
       - "${PORT}:${PORT}"

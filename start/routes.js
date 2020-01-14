@@ -7,10 +7,10 @@ const Route = use('Route')
 Route.post('login', 'UserController.login')
 
 // User
-Route.resource('user', 'UserController')
+Route.resource('users', 'UserController')
   .apiOnly()
   .middleware('auth:jwt')
-
-// Route.get('/', () => {
-//   return { greeting: 'Hello world in JSON !' }
-// })
+  .validator(new Map([
+    [['users.store'], ['UserStore']],
+    [['users.update'], ['UserUpdate']]
+  ]))

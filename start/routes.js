@@ -6,6 +6,11 @@ const Route = use('Route')
 // Autenticação
 Route.post('login', 'UserController.login')
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON !' }
-})
+// User
+Route.resource('user', 'UserController')
+  .apiOnly()
+  .middleware('auth:jwt')
+
+// Route.get('/', () => {
+//   return { greeting: 'Hello world in JSON !' }
+// })

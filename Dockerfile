@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm i -g @adonisjs/cli  && \
+RUN npm i -g @adonisjs/cli  && \    
     npm i mysql && \
     npm i nodemon && \
     npm update

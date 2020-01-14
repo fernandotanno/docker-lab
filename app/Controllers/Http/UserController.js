@@ -6,6 +6,7 @@ class UserController {
 
     // Autenticação e retorno do token jwt
     async login({ request, response, auth }) {
+
         const { email, password } = request.all()
 
         const user = await User.findBy('email', email)
@@ -14,7 +15,7 @@ class UserController {
             const token = await auth.attempt(email, password, {
                 "username": user.username,
                 "email": user.email,
-                "access": user.access,        
+                "access": user.access,
             })
             return response.status(201).json({
                 message: 'Logado com sucesso',
@@ -35,7 +36,7 @@ class UserController {
             const user = await User.create(data)
 
             return response.status(201).json({
-                message: 'Usuário incluso com sucesso',
+                message: `Usuário ${user.username} incluso com sucesso`,
                 data: user
             })
         }
@@ -48,16 +49,15 @@ class UserController {
     // Alterar usuário
     async update({ auth, request, response, params }) {
 
-        const user = await User.find(params.id)
-
-        const { ...data } = request.only(['username', 'email', 'password', 'access', 'status'])
-
         if (auth.user.access === 'manager') {
+            const user = await User.find(params.id)
+            const { ...data } = request.only(['username', 'email', 'password', 'access', 'status'])
+
             user.merge(data)
             user.save()
 
             return response.status(201).json({
-                message: `Usuário ${user.username}, alterado com sucesso`,
+                message: `Usuário ${user.username} alterado com sucesso`,
                 data: user
             })
         }
@@ -92,6 +92,23 @@ class UserController {
             const user = await User.find(params.id)
             return response.status(200).json({
                 data: user
+            })
+        }
+
+        return response.status(401).json({
+            message: 'Funcionalidade não permitida para seu nivel de acesso'
+        })
+    }
+
+    // Deletar usuário
+    async destroy({ auth, response, params }) {
+
+        if (auth.user.access === 'manager') {
+            const user = await User.find(params.id)
+            await user.delete()
+
+            return response.status(200).json({
+                message: 'Usuário deletado com sucesso'
             })
         }
 

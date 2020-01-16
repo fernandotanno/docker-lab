@@ -15,11 +15,12 @@ services:
     networks: 
       - docker-adonis-api   
     depends_on:
-        - mysqlsrv 
+        - db-docker-lab
+        - db-docker-lab-test
 
 # Container Mysql
-  mysqlsrv:    
-    container_name: mysql-docker
+  db-docker-lab:    
+    container_name: db-docker-lab
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
     restart: always
@@ -31,10 +32,26 @@ services:
     ports:        
         - "${DB_PORT}:${DB_PORT}"
     volumes:
-      - /home/fernando/volumes/mysql:/var/lib/mysql  
+      - /home/fernando/volumes/mysql:/var/lib/mysql
+      
     networks: 
       - docker-adonis-api
-
+      
+# Container Mysql Teste
+  db-docker-lab-test:    
+    container_name: db-docker-lab-test
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_TEST}     
+    ports:        
+        - "3308:3308"
+    volumes:
+      - ./database/docker/mysql-test:/docker-entrypoint-initdb.d
+    networks: 
+      - docker-adonis-api
+      
       # Network
 networks:
   docker-adonis-api:

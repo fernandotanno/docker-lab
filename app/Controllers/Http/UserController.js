@@ -22,6 +22,7 @@ class UserController {
                 data: token
             })
         }
+       // response.unauthorized('Email e/ou senha incorretos')
         return response.status(401).json({
             message: "Autenticação não permitida, verifique Usuário e/ou Senha"
         })
@@ -78,6 +79,7 @@ class UserController {
             return response.status(200).json({
                 data: user
             })
+            //return user
         }
 
         return response.status(401).json({

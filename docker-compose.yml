@@ -5,9 +5,11 @@ version: '3'
 # Contaniner api adonis
 services:
   api:
-    container_name: docker-lab-api
+    container_name: api-docker-lab
     # command: bash adonis install @adonisjs/validator && npm update
     build: .
+    environment:
+      TZ: ${APP_TIME_ZONE}
     ports:
       - "${PORT}:${PORT}"
     volumes:
@@ -16,41 +18,42 @@ services:
       - docker-adonis-api   
     depends_on:
         - db-docker-lab
-        - db-docker-lab-test
+        # - db-docker-lab-test
 
 # Container Mysql
   db-docker-lab:    
     container_name: db-docker-lab
     image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USER}      
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: ${DB_TIME_ZONE}
     ports:        
         - "${DB_PORT}:${DB_PORT}"
     volumes:
-      - /home/fernando/volumes/mysql:/var/lib/mysql
+      - /home/fernando/volumes/mysql/docker-lab:/var/lib/mysql
       
     networks: 
       - docker-adonis-api
       
-# Container Mysql Teste
-  db-docker-lab-test:    
-    container_name: db-docker-lab-test
-    image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_TEST}     
-    ports:        
-        - "3308:3308"
-    volumes:
-      - ./database/docker/mysql-test:/docker-entrypoint-initdb.d
-    networks: 
-      - docker-adonis-api
+# # Container Mysql Teste
+#   db-docker-lab-test:    
+#     container_name: db-docker-lab-test
+#     image: mysql:5.7
+#     command: --default-authentication-plugin=mysql_native_password
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_TEST}     
+#     ports:        
+#         - "3308:3308"
+#     volumes:
+#       - ./database/docker/mysql-test:/docker-entrypoint-initdb.d
+#     networks: 
+#       - docker-adonis-api
       
       # Network
 networks:

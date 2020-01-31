@@ -28,3 +28,6 @@ Executa migration no contanier que esta rodando a Api.
 ```
 docker container exec docker-lab-api adonis migration:run
 ```
+```
+docker container exec -it api-docker-lab adonis seed --files='databaseSeed.js'
+```
